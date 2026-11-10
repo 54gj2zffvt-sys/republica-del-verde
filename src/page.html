@@ -1,0 +1,882 @@
+<title>República del Verde</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: una proclama. El sello y el grito de la marca arriba; el menú como registro oficial
+   entre filetes dobles verdes; una sola franja verde para las promos del Ejecutivo. */
+:root{
+  --paper:#F5EFDD;        /* crema del menú */
+  --paper-shade:#ECE3CB;  /* el mismo papel, un tono más hondo */
+  --paper-light:#FBF7EC;  /* campos para escribir */
+  --green:#25562A;        /* verde de la marca */
+  --green-deep:#1A4220;
+  --ink:#462F1F;          /* café de los textos */
+  --ink-soft:#6A5441;
+  --rule:#B0A482;         /* filete fino del menú */
+  --rule-on-green:rgba(245,239,221,.32);
+  --scrim:rgba(26,66,32,.6);
+  --error:#9A2B1E;        /* aviso de dato faltante */
+
+  --serif:"RdV Serif","Noto Serif","Droid Serif",Georgia,"Times New Roman",serif;
+
+  /* tinta de contexto: se invierte dentro de la franja verde */
+  --accent:var(--green);
+  --on-accent:var(--paper);
+  --line:var(--rule);
+
+  --bar-h:3.25rem;
+  --section-gap:clamp(3.25rem,8vw,6rem);
+  color-scheme:light;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:1rem;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,p,ul{margin:0}
+ul{padding:0;list-style:none}
+a{color:inherit}
+button,input,textarea{font:inherit;color:inherit;border-radius:0}
+button{-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+.wrap{width:100%;max-width:70rem;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+@media (min-width:44rem){.wrap{max-width:min(70rem,92vw)}}
+
+.i{width:1.3em;height:1.3em;flex:none;fill:currentColor}
+.seal{display:block;aspect-ratio:640/628;background-position:center;background-repeat:no-repeat;background-size:contain}
+
+/* ---------- Botones ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.6em;min-height:3rem;padding:.5rem 1.15rem;border:2px solid var(--accent);background:var(--accent);color:var(--on-accent);font-size:.8125rem;font-weight:700;font-stretch:semi-condensed;line-height:1.1;letter-spacing:.11em;text-transform:uppercase;text-decoration:none;white-space:nowrap;cursor:pointer;transition:background-color .15s ease,border-color .15s ease,color .15s ease,transform .1s ease}
+.btn:active{transform:translateY(1px)}
+.btn--ghost{background:transparent;color:var(--accent)}
+@media (hover:hover){
+  .btn:hover{background:var(--green-deep);border-color:var(--green-deep)}
+  .btn--ghost:hover{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+}
+.btn--block{width:100%}
+.btn--small{min-height:2.5rem;padding:.35rem .9rem;font-size:.75rem}
+
+/* ---------- Título entre filetes dobles (el recurso del menú impreso) ---------- */
+.rule-title{padding:.8rem 0;border-block:6px double var(--accent);color:var(--accent);text-align:center;font-size:1rem;font-weight:700;line-height:1.3;letter-spacing:.22em;text-indent:.22em;text-transform:uppercase;text-wrap:balance}
+@media (min-width:44rem){.rule-title{font-size:1.25rem;letter-spacing:.28em;text-indent:.28em}}
+
+/* ---------- Barra fija de secciones ---------- */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);border-bottom:6px double var(--green)}
+.bar-in{display:flex;align-items:center;gap:1.25rem;min-height:var(--bar-h)}
+.bar-brand{display:none;flex:none;align-items:center;gap:.6rem;text-decoration:none;font-weight:700}
+.bar-brand .seal{width:2.6rem}
+.bar-name{display:none;font-size:1.05rem;white-space:nowrap}
+.bar-cta{display:none;flex:none}
+.sections{position:relative;flex:1;min-width:0;display:flex;gap:.15rem;overflow-x:auto;scrollbar-width:none;margin-right:calc(-1 * max(16px,env(safe-area-inset-right,0px)));padding-right:2.25rem;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 2rem),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 2rem),transparent)}
+.sections::-webkit-scrollbar{display:none}
+.sections a{position:relative;flex:none;padding:1.05rem .65rem;color:var(--green);font-size:.75rem;font-weight:700;font-stretch:semi-condensed;line-height:1.15;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;white-space:nowrap}
+.sections a:first-child{padding-left:0}
+.sections a::after{content:"";position:absolute;left:.65rem;right:.65rem;bottom:.6rem;height:2px;background:currentColor;transform:scaleX(0);transform-origin:left center;transition:transform .2s ease}
+.sections a:first-child::after{left:0}
+.sections a[aria-current]::after{transform:scaleX(1)}
+.sections a:focus-visible{outline-offset:-4px}
+@media (hover:hover){.sections a:hover::after{transform:scaleX(1)}}
+.sections a[aria-current]{color:var(--ink)}
+@media (min-width:62.5rem){
+  .bar-brand{display:inline-flex}
+  .bar-cta{display:inline-flex}
+  .sections{justify-content:center;margin-right:0;padding-right:0;-webkit-mask-image:none;mask-image:none}
+  .sections a:first-child{padding-left:.65rem}
+  .sections a:first-child::after{left:.65rem}
+}
+@media (min-width:73rem){.bar-name{display:inline}}
+
+/* ---------- Portada ---------- */
+.hero{padding-block:clamp(1.75rem,5vw,4.5rem) clamp(2.75rem,7vw,5.5rem)}
+.hero-in{display:grid;justify-items:center;gap:1.4rem;text-align:center}
+.hero .seal{--tilt:-5deg;width:min(11.25rem,50vw);transform:rotate(var(--tilt))}
+.hero-copy{display:grid;justify-items:center;gap:1.1rem;min-width:0}
+.cry-lead{display:block;font-size:clamp(1.1rem,2.3vw,1.5rem);font-style:italic;font-weight:400;line-height:1.3}
+.cry{display:block;margin-top:.3rem;color:var(--green);font-size:clamp(3.25rem,17.5vw,7.75rem);font-weight:900;font-stretch:extra-condensed;line-height:1;letter-spacing:.005em;text-transform:uppercase}
+.cry-open{position:relative;top:-.172em}
+.hero-sub{max-width:33ch;font-size:1.0625rem;line-height:1.6;text-wrap:balance}
+.cta-row{display:grid;grid-template-columns:minmax(0,1fr);gap:.75rem;width:min(100%,21rem);margin-top:.35rem}
+@media (min-width:30rem){.cta-row{display:flex;flex-wrap:wrap;justify-content:center;width:auto}}
+@media (min-width:56rem){
+  .hero-in{grid-template-columns:minmax(0,7fr) minmax(0,4fr);align-items:center;justify-items:start;gap:3rem;text-align:left}
+  .hero-copy{order:-1;justify-items:start}
+  .hero .seal{--tilt:-7deg;justify-self:center;width:min(21rem,100%)}
+  .cry{font-size:clamp(5rem,9.6vw,7.75rem)}
+  .hero-sub{max-width:36ch;font-size:1.15rem}
+  .hero .cta-row{justify-content:flex-start}
+}
+@media (prefers-reduced-motion:no-preference){
+  .hero .seal{animation:stamp .6s cubic-bezier(.2,.85,.25,1.2) both}
+}
+@keyframes stamp{from{transform:rotate(var(--tilt)) scale(1.3)}to{transform:rotate(var(--tilt)) scale(1)}}
+
+/* ---------- Control de cantidad: «Agregar» que se vuelve − n + ---------- */
+.qty{width:6.5rem;height:2.5rem}
+.add{width:100%;height:100%;border:1.5px solid var(--accent);background:transparent;color:var(--accent);font-size:.72rem;font-weight:700;font-stretch:semi-condensed;line-height:1;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:background-color .15s ease,color .15s ease,transform .1s ease}
+.add:active{transform:translateY(1px)}
+@media (hover:hover){.add:hover{background:var(--accent);color:var(--on-accent)}}
+.stepper{display:grid;grid-template-columns:2.5rem minmax(0,1fr) 2.5rem;width:6.5rem;height:2.5rem;border:1.5px solid var(--accent);background:var(--accent);color:var(--on-accent)}
+.stepper button{display:grid;place-items:center;border:0;background:transparent;color:inherit;cursor:pointer}
+.stepper button:active{transform:scale(.9)}
+.stepper button:focus-visible{outline-color:var(--on-accent);outline-offset:-4px}
+.stepper output{display:grid;place-items:center;font-weight:700;font-variant-numeric:tabular-nums}
+
+/* ---------- Promos del Ejecutivo (franja verde) ---------- */
+.promos{--accent:var(--paper);--on-accent:var(--green);--line:var(--rule-on-green);padding-block:clamp(2.5rem,6vw,4.5rem);background:var(--green);color:var(--paper);scroll-margin-top:var(--bar-h)}
+.promo-grid{display:grid}
+.promo{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;column-gap:1rem;padding-block:1.4rem;border-bottom:1px solid var(--line)}
+.promo:last-child{border-bottom:0;padding-bottom:0}
+.promo-price{grid-column:1 / -1;font-size:3.25rem;font-weight:900;font-stretch:extra-condensed;line-height:1;font-variant-numeric:tabular-nums}
+.promo-text{min-width:0;margin-top:.45rem}
+.promo-name{font-size:1.2rem;font-weight:700;line-height:1.3}
+.promo-desc{margin-top:.15rem;font-size:.95rem;line-height:1.5}
+@media (min-width:44rem){
+  .promo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .promo{grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr auto;align-items:start;padding:1.9rem 2rem}
+  .promo:last-child{padding-bottom:1.9rem}
+  .promo .qty{margin-top:1.25rem}
+  .promo-price{font-size:3.75rem}
+}
+@media (min-width:44rem) and (max-width:62.49rem){
+  .promo:nth-child(odd){padding-left:0;border-right:1px solid var(--line)}
+  .promo:nth-child(even){padding-right:0}
+  .promo:nth-child(n+3){border-bottom:0;padding-bottom:.5rem}
+}
+@media (min-width:62.5rem){
+  .promo-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .promo{padding:2.1rem 1.6rem .5rem;border-bottom:0;border-left:1px solid var(--line)}
+  .promo:last-child{padding-bottom:.5rem}
+  .promo:first-child{padding-left:0;border-left:0}
+  .promo:last-child{padding-right:0}
+}
+
+/* ---------- Menú: los tres ministerios ---------- */
+.menu{padding-block:var(--section-gap)}
+.ministries{display:grid;gap:2.75rem}
+.ministry{min-width:0;scroll-margin-top:calc(var(--bar-h) + 1.25rem)}
+.gabinete{max-width:40rem;margin:0 auto clamp(1.9rem,4.5vw,3.25rem);text-align:center;font-size:clamp(1.0625rem,2.2vw,1.4rem);line-height:1.55;text-wrap:balance}
+.gabinete strong{color:var(--green)}
+.item{display:grid;grid-template-columns:1.75rem minmax(0,1fr) 6.5rem;column-gap:.75rem;align-items:start;padding-block:1.15rem;border-bottom:1px solid var(--line)}
+.item-num{color:var(--green);font-size:1.15rem;font-weight:700;line-height:1.4;font-variant-numeric:tabular-nums}
+.item-name{font-size:1.0625rem;font-weight:700;line-height:1.35}
+.item-desc{margin-top:.2rem;font-size:.95rem;line-height:1.5;text-wrap:pretty}
+.item-side{display:grid;justify-items:end;gap:.55rem}
+.price{color:var(--green);font-size:1.35rem;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
+.aji{margin-top:1.75rem;text-align:center;font-style:italic}
+@media (min-width:56rem){
+  .ministries{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:4.5rem;row-gap:3.25rem;align-items:start}
+  .ministry--wide{grid-column:1 / -1}
+  .ministry--wide .items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:4.5rem}
+  .item{grid-template-columns:2.1rem minmax(0,1fr) 6.5rem;padding-block:1.3rem}
+  .item-name{font-size:1.25rem}
+  .item-desc{font-size:1rem}
+  .price{font-size:1.5rem}
+}
+
+/* ---------- Adicionales e hidratación ---------- */
+.extras{padding-block:clamp(2.75rem,7vw,5rem);background:var(--paper-shade)}
+.extras-grid{display:grid;gap:2.75rem}
+.extras-col{min-width:0;scroll-margin-top:calc(var(--bar-h) + 1.25rem)}
+.extras .rule-title{font-size:.95rem}
+.extras .items{margin-top:.6rem}
+.extra{display:grid;grid-template-columns:minmax(0,1fr) auto 6.5rem;align-items:center;column-gap:.75rem;padding-block:.5rem}
+.extra-name{display:flex;align-items:baseline;gap:.6rem;min-width:0;font-size:1.0625rem;line-height:1.35}
+.extra-name::after{content:"";flex:1;min-width:0;border-bottom:2px dotted var(--line)}
+.extra .price{font-size:1.15rem}
+@media (min-width:44rem){.extras .rule-title{font-size:1.05rem}}
+@media (min-width:56rem){.extras-grid{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:4.5rem;align-items:start}}
+
+/* ---------- Horario y envíos ---------- */
+.contact{padding-block:var(--section-gap);text-align:center;scroll-margin-top:var(--bar-h)}
+.facts{display:grid;justify-items:center}
+.fact{display:grid;justify-items:center;gap:.5rem;min-width:0}
+.fact + .fact{margin-top:2.25rem;padding-top:2.25rem;border-top:1px solid var(--line);width:min(100%,26rem)}
+.fact-label{color:var(--green);font-size:.9rem;font-weight:700;line-height:1.3;letter-spacing:.3em;text-indent:.3em;text-transform:uppercase}
+.fact-big{font-size:clamp(2.5rem,12.5vw,4.75rem);font-weight:700;line-height:1.05;font-variant-numeric:tabular-nums;white-space:nowrap}
+.fact-big i{color:var(--green);font-size:.45em;font-weight:400;vertical-align:.3em}
+.fact-big a{color:var(--green);text-decoration:none}
+.contact .cta-row{margin:2.25rem auto 0}
+@media (min-width:56rem){
+  .facts{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+  .fact + .fact{margin-top:0;padding-top:0;border-top:0;border-left:1px solid var(--line);width:100%}
+  .fact-big{font-size:clamp(3.25rem,6.2vw,4.75rem)}
+}
+
+/* ---------- Pie ---------- */
+.foot{padding-block:0 2.5rem}
+.foot-in{display:grid;justify-items:center;gap:.35rem;padding-top:2rem;border-top:6px double var(--green);text-align:center}
+.foot .seal{width:4.5rem;margin-bottom:.4rem}
+.foot-name{font-size:1.1rem;font-weight:700}
+.foot-motto{font-style:italic}
+.foot-facts{margin-top:.5rem;color:var(--ink-soft);font-size:.95rem}
+.has-order .foot{padding-bottom:7rem}
+
+/* ---------- Barra del pedido ---------- */
+.orderbar{--accent:var(--paper);--on-accent:var(--green);position:fixed;inset:auto 0 0;z-index:30;border-top:6px double var(--paper);background:var(--green);color:var(--paper);transform:translateY(110%);visibility:hidden;transition:transform .3s cubic-bezier(.16,1,.3,1),visibility 0s linear .3s}
+.orderbar.is-on{transform:none;visibility:visible;transition:transform .3s cubic-bezier(.16,1,.3,1)}
+.orderbar-btn{display:flex;align-items:center;gap:1rem;min-height:4rem;padding-top:.55rem;padding-bottom:calc(.55rem + env(safe-area-inset-bottom,0px));border:0;background:none;color:inherit;text-align:left;cursor:pointer}
+.orderbar-btn:focus-visible{outline-offset:-5px}
+.ob-label{display:grid;flex:1;min-width:0;line-height:1.25}
+.ob-label b{font-size:1.05rem}
+.ob-label span{font-size:.9rem}
+.ob-total{font-size:1.5rem;font-weight:900;font-stretch:extra-condensed;line-height:1;font-variant-numeric:tabular-nums}
+.ob-go{display:inline-flex;align-items:center;min-height:2.5rem;padding:0 .9rem;background:var(--paper);color:var(--green);font-size:.75rem;font-weight:700;font-stretch:semi-condensed;letter-spacing:.11em;text-transform:uppercase;white-space:nowrap}
+.orderbar.bump .ob-total{animation:bump .3s ease}
+@keyframes bump{40%{transform:scale(1.18)}}
+
+/* ---------- Hoja del pedido ---------- */
+html:has(dialog[open]){overflow:hidden}
+.sheet{--from:translateY(2rem);width:100%;max-width:100%;max-height:92vh;max-height:92dvh;margin:auto 0 0;padding:0;border:0;border-top:6px double var(--green);background:var(--paper);color:var(--ink);overflow:hidden}
+.sheet[open]{display:grid;grid-template-rows:auto minmax(0,1fr) auto}
+.sheet::backdrop{background:var(--scrim)}
+.sheet-head,.sheet-body,.sheet-foot{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-block:.9rem .75rem;border-bottom:1px solid var(--line)}
+.sheet-title{color:var(--green);font-size:1.05rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase}
+.icon-btn{display:grid;place-items:center;width:2.75rem;height:2.75rem;margin-right:-.6rem;border:0;background:none;color:var(--green);cursor:pointer}
+.icon-btn .i{width:1.35rem;height:1.35rem}
+.sheet-body{overflow-y:auto;overscroll-behavior:contain;padding-block:.25rem 1.25rem}
+.line{display:grid;gap:.5rem;padding-block:.95rem;border-bottom:1px solid var(--line)}
+.line-top,.line-ctl{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.line-top{align-items:baseline}
+.line-name{min-width:0;font-weight:700;line-height:1.35}
+.line-sum{color:var(--green);font-size:1.15rem;font-weight:700;font-variant-numeric:tabular-nums}
+.line-unit{color:var(--ink-soft);font-size:.9rem;font-variant-numeric:tabular-nums}
+.link-btn{margin-top:.75rem;padding:.5rem 0;border:0;background:none;color:var(--green);font-size:.9rem;font-weight:700;text-decoration:underline;text-underline-offset:.2em;cursor:pointer}
+.empty{display:grid;justify-items:center;gap:.5rem;padding-block:2.5rem 1.5rem;text-align:center}
+.empty b{font-size:1.15rem}
+.empty .btn{margin-top:.75rem}
+.fields{display:grid;gap:1rem;margin-top:1.4rem}
+.field{display:grid;gap:.35rem}
+.field label{color:var(--green);font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.field input,.field textarea{display:block;width:100%;padding:.65rem .75rem;border:1.5px solid var(--ink-soft);background:var(--paper-light);color:var(--ink);font-size:1rem;line-height:1.4}
+.field textarea{min-height:4.25rem;resize:vertical}
+.field input:focus-visible,.field textarea:focus-visible{outline-offset:1px;border-color:var(--green)}
+.field ::placeholder{color:var(--ink-soft);opacity:1}
+.help{color:var(--ink-soft);font-size:.875rem;line-height:1.45}
+.error{color:var(--error);font-size:.875rem;font-weight:700;line-height:1.45}
+.field input[aria-invalid="true"]{border-color:var(--error);box-shadow:inset 0 0 0 1px var(--error)}
+.sheet-foot{display:grid;gap:.7rem;padding-top:.9rem;padding-bottom:calc(1rem + env(safe-area-inset-bottom,0px));border-top:6px double var(--green)}
+.total{display:flex;align-items:baseline;justify-content:space-between;gap:1rem}
+.total span{font-size:.9rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase}
+.total strong{color:var(--green);font-size:1.9rem;font-weight:900;font-stretch:extra-condensed;line-height:1;font-variant-numeric:tabular-nums}
+.sheet-foot .help{text-align:center}
+@media (min-width:48rem){
+  .sheet{--from:translateX(2rem);width:28rem;max-width:28rem;height:100%;max-height:100%;margin:0 0 0 auto;border-top:0;border-left:6px double var(--green)}
+  .sheet-head,.sheet-body,.sheet-foot{padding-inline:1.75rem}
+}
+@media (prefers-reduced-motion:no-preference){
+  .sheet[open]{animation:sheet-in .28s cubic-bezier(.16,1,.3,1)}
+  .sheet[open]::backdrop{animation:fade-in .2s ease-out}
+}
+@keyframes sheet-in{from{transform:var(--from);opacity:.4}}
+@keyframes fade-in{from{opacity:0}}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}
+}
+</style>
+<style>
+@font-face{font-family:"RdV Serif";font-style:normal;font-weight:400 900;font-stretch:62.5% 100%;font-display:block;src:url(data:font/woff2;base64,%%ROMAN%%) format("woff2")}
+@font-face{font-family:"RdV Serif";font-style:italic;font-weight:400;font-stretch:100%;font-display:block;src:url(data:font/woff2;base64,%%ITALIC%%) format("woff2")}
+.seal{background-image:url(data:image/webp;base64,%%SEAL%%)}
+</style>
+
+%%ICONS%%
+
+<div class="page" lang="es" id="inicio">
+
+<div class="bar">
+  <div class="wrap bar-in">
+    <a class="bar-brand" href="#inicio" aria-label="República del Verde, ir al inicio">
+      <span class="seal" aria-hidden="true"></span>
+      <span class="bar-name">República del Verde</span>
+    </a>
+    <nav class="sections" aria-label="Secciones del menú">
+      <a href="#promos">Promos</a>
+      <a href="#bolones">Bolones</a>
+      <a href="#tigrillos">Tigrillos</a>
+      <a href="#empanadas">Empanadas</a>
+      <a href="#adicionales">Adicionales</a>
+      <a href="#hidratacion">Hidratación</a>
+    </nav>
+    <a class="btn btn--small bar-cta" href="https://wa.me/593968375755?text=Hola%2C%20Rep%C3%BAblica%20del%20Verde.%20Quiero%20hacer%20un%20pedido." target="_blank" rel="noopener">
+      <svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>Pedir por WhatsApp
+    </a>
+  </div>
+</div>
+
+<main>
+
+<header class="hero">
+  <div class="wrap hero-in">
+    <span class="seal" role="img" aria-label="Sello de República del Verde: un racimo de verde sobre el nombre."></span>
+    <div class="hero-copy">
+      <h1>
+        <span class="cry-lead">Desde siempre y hasta siempre,</span>
+        <span class="cry"><span class="cry-open">¡</span>Viva <br>el bolón!</span>
+      </h1>
+      <p class="hero-sub">Bolones, tigrillos y empanadas de verde. Pide por WhatsApp de 07:30 a 12:30 y te lo llevamos a domicilio.</p>
+      <div class="cta-row">
+        <a class="btn" href="https://wa.me/593968375755?text=Hola%2C%20Rep%C3%BAblica%20del%20Verde.%20Quiero%20hacer%20un%20pedido." target="_blank" rel="noopener">
+          <svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>Pedir por WhatsApp
+        </a>
+        <a class="btn btn--ghost" href="#promos">Ver el menú</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="promos" id="promos" aria-labelledby="t-promos">
+  <div class="wrap">
+    <h2 class="rule-title" id="t-promos">Promos del Ejecutivo</h2>
+    <ul class="promo-grid">
+      <li class="promo" data-item="promo-tigrillo-presidencial" data-name="Promo 1 Tigrillo Presidencial más extra de longaniza" data-price="6.00">
+        <p class="promo-price">$6.00</p>
+        <div class="promo-text">
+          <h3 class="promo-name">1 Tigrillo Presidencial</h3>
+          <p class="promo-desc">Más extra de longaniza.</p>
+        </div>
+        <div class="qty"></div>
+      </li>
+      <li class="promo" data-item="promo-bolones-ciudadanos" data-name="Promo 2 Bolones ciudadanos" data-price="8.00" data-ask="Ingredientes y bebidas" data-hint="Ej.: uno de queso, uno de maní y dos jugos">
+        <p class="promo-price">$8.00</p>
+        <div class="promo-text">
+          <h3 class="promo-name">2 Bolones ciudadanos</h3>
+          <p class="promo-desc">2 huevos fritos + 2 cafés o jugos naturales.</p>
+        </div>
+        <div class="qty"></div>
+      </li>
+      <li class="promo" data-item="promo-tigrillos-regional" data-name="Promo 2 Tigrillos Regional" data-price="10.00" data-ask="¿Cafés o jugos naturales?" data-hint="Ej.: un café y un jugo">
+        <p class="promo-price">$10.00</p>
+        <div class="promo-text">
+          <h3 class="promo-name">2 Tigrillos Regional</h3>
+          <p class="promo-desc">2 huevos fritos + 2 cafés o jugos naturales.</p>
+        </div>
+        <div class="qty"></div>
+      </li>
+      <li class="promo" data-item="promo-bolones-dictador" data-name="Promo 2 Bolones Dictador" data-price="12.00" data-ask="¿Cafés o jugos naturales?" data-hint="Ej.: un café y un jugo">
+        <p class="promo-price">$12.00</p>
+        <div class="promo-text">
+          <h3 class="promo-name">2 Bolones Dictador</h3>
+          <p class="promo-desc">2 huevos fritos + 2 cafés o jugos naturales.</p>
+        </div>
+        <div class="qty"></div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section class="menu" aria-label="Menú">
+  <div class="wrap">
+    <p class="gabinete"><strong>Gabinete Ministerial:</strong> Todos nuestros productos contienen una cantidad SOBERANA de verde, queso y chicharrón.</p>
+    <div class="ministries">
+
+      <section class="ministry" id="bolones" aria-labelledby="t-bolones">
+        <h2 class="rule-title" id="t-bolones">Ministerio de Bolones</h2>
+        <ul class="items">
+          <li class="item" data-item="bolon-ciudadano" data-name="Bolón Ciudadano" data-price="3.50" data-ask="¿Con qué ingrediente?" data-hint="Queso, chicharrón o maní">
+            <span class="item-num" aria-hidden="true">1</span>
+            <div class="item-body">
+              <h3 class="item-name">Bolón Ciudadano</h3>
+              <p class="item-desc">Masa de verde con un ingrediente a su elección: queso, chicharrón o maní. Acompañado de huevo frito.</p>
+            </div>
+            <div class="item-side"><span class="price">$3.50</span><div class="qty"></div></div>
+          </li>
+          <li class="item" data-item="bolon-gobernador" data-name="Bolón Gobernador" data-price="4.00" data-ask="¿Con qué dos ingredientes?" data-hint="Queso, chicharrón o maní">
+            <span class="item-num" aria-hidden="true">2</span>
+            <div class="item-body">
+              <h3 class="item-name">Bolón Gobernador</h3>
+              <p class="item-desc">Masa de verde con dos ingredientes a su elección: queso, chicharrón o maní. Acompañado de huevo frito.</p>
+            </div>
+            <div class="item-side"><span class="price">$4.00</span><div class="qty"></div></div>
+          </li>
+          <li class="item" data-item="bolon-dictador" data-name="Bolón Dictador" data-price="6.00">
+            <span class="item-num" aria-hidden="true">3</span>
+            <div class="item-body">
+              <h3 class="item-name">Bolón Dictador</h3>
+              <p class="item-desc">Masa de verde, queso criollo, chicharrón, maní y salsa de queso, longaniza. Acompañado de huevo frito.</p>
+            </div>
+            <div class="item-side"><span class="price">$6.00</span><div class="qty"></div></div>
+          </li>
+        </ul>
+      </section>
+
+      <section class="ministry" id="tigrillos" aria-labelledby="t-tigrillos">
+        <h2 class="rule-title" id="t-tigrillos">Ministerio de Tigrillos</h2>
+        <ul class="items">
+          <li class="item" data-item="tigrillo-municipal" data-name="Tigrillo Municipal" data-price="4.00">
+            <span class="item-num" aria-hidden="true">4</span>
+            <div class="item-body">
+              <h3 class="item-name">Tigrillo Municipal</h3>
+              <p class="item-desc">Tigrillo zarumeño: masa de verde, queso, huevos, cebolla blanca y cebollín.</p>
+            </div>
+            <div class="item-side"><span class="price">$4.00</span><div class="qty"></div></div>
+          </li>
+          <li class="item" data-item="tigrillo-regional" data-name="Tigrillo Regional" data-price="5.00">
+            <span class="item-num" aria-hidden="true">5</span>
+            <div class="item-body">
+              <h3 class="item-name">Tigrillo Regional</h3>
+              <p class="item-desc">Tigrillo zarumeño: masa de verde, queso, huevos, chicharrón, cebolla blanca y cebollín.</p>
+            </div>
+            <div class="item-side"><span class="price">$5.00</span><div class="qty"></div></div>
+          </li>
+          <li class="item" data-item="tigrillo-ministerial" data-name="Tigrillo Ministerial" data-price="4.50">
+            <span class="item-num" aria-hidden="true">6</span>
+            <div class="item-body">
+              <h3 class="item-name">Tigrillo Ministerial</h3>
+              <p class="item-desc">Masa de verde, queso, huevos, salsa de queso, cebolla blanca y cebollín.</p>
+            </div>
+            <div class="item-side"><span class="price">$4.50</span><div class="qty"></div></div>
+          </li>
+          <li class="item" data-item="tigrillo-presidencial" data-name="Tigrillo Presidencial" data-price="5.50">
+            <span class="item-num" aria-hidden="true">7</span>
+            <div class="item-body">
+              <h3 class="item-name">Tigrillo Presidencial</h3>
+              <p class="item-desc">Masa de verde, queso, huevos, chicharrón, salsa de queso, cebolla blanca y cebollín.</p>
+            </div>
+            <div class="item-side"><span class="price">$5.50</span><div class="qty"></div></div>
+          </li>
+        </ul>
+      </section>
+
+      <section class="ministry ministry--wide" id="empanadas" aria-labelledby="t-empanadas">
+        <h2 class="rule-title" id="t-empanadas">Ministerio de Empanadas</h2>
+        <ul class="items">
+          <li class="item" data-item="empanada-queso" data-name="Empanada de Queso" data-price="1.50">
+            <span class="item-num" aria-hidden="true">8</span>
+            <div class="item-body">
+              <h3 class="item-name">Empanada de Queso</h3>
+              <p class="item-desc">Empanada de verde, rellena de queso.</p>
+            </div>
+            <div class="item-side"><span class="price">$1.50</span><div class="qty"></div></div>
+          </li>
+          <li class="item" data-item="empanada-carne" data-name="Empanada de Carne" data-price="2.00">
+            <span class="item-num" aria-hidden="true">9</span>
+            <div class="item-body">
+              <h3 class="item-name">Empanada de Carne</h3>
+              <p class="item-desc">Empanada de verde, rellena de carne.</p>
+            </div>
+            <div class="item-side"><span class="price">$2.00</span><div class="qty"></div></div>
+          </li>
+        </ul>
+      </section>
+
+    </div>
+    <p class="aji">Todos los productos incluyen salsa de ají.</p>
+  </div>
+</section>
+
+<section class="extras" aria-label="Adicionales e hidratación">
+  <div class="wrap extras-grid">
+    <section class="extras-col" id="adicionales" aria-labelledby="t-adicionales">
+      <h2 class="rule-title" id="t-adicionales">Adicionales</h2>
+      <ul class="items">
+        <li class="extra" data-item="ad-huevo-frito" data-name="Huevo frito" data-price="0.50"><span class="extra-name"><span>Huevo frito</span></span><span class="price">$0.50</span><div class="qty"></div></li>
+        <li class="extra" data-item="ad-salsa-queso" data-name="Salsa de queso" data-price="1.00"><span class="extra-name"><span>Salsa de queso</span></span><span class="price">$1.00</span><div class="qty"></div></li>
+        <li class="extra" data-item="ad-queso-criollo" data-name="Queso criollo" data-price="1.00"><span class="extra-name"><span>Queso criollo</span></span><span class="price">$1.00</span><div class="qty"></div></li>
+        <li class="extra" data-item="ad-chicharron" data-name="Chicharrón" data-price="1.25"><span class="extra-name"><span>Chicharrón</span></span><span class="price">$1.25</span><div class="qty"></div></li>
+        <li class="extra" data-item="ad-longaniza" data-name="Longaniza" data-price="1.50"><span class="extra-name"><span>Longaniza</span></span><span class="price">$1.50</span><div class="qty"></div></li>
+        <li class="extra" data-item="ad-bistec" data-name="Bistec de carne" data-price="2.00"><span class="extra-name"><span>Bistec de carne</span></span><span class="price">$2.00</span><div class="qty"></div></li>
+        <li class="extra" data-item="ad-pechuga" data-name="Pechuga de pollo a la plancha" data-price="2.25"><span class="extra-name"><span>Pechuga de pollo a la plancha</span></span><span class="price">$2.25</span><div class="qty"></div></li>
+      </ul>
+    </section>
+    <section class="extras-col" id="hidratacion" aria-labelledby="t-hidratacion">
+      <h2 class="rule-title" id="t-hidratacion">Hidratación</h2>
+      <ul class="items">
+        <li class="extra" data-item="be-cafe" data-name="Café" data-price="1.25"><span class="extra-name"><span>Café</span></span><span class="price">$1.25</span><div class="qty"></div></li>
+        <li class="extra" data-item="be-jugo" data-name="Jugo natural" data-price="1.50"><span class="extra-name"><span>Jugo natural</span></span><span class="price">$1.50</span><div class="qty"></div></li>
+        <li class="extra" data-item="be-gaseosa" data-name="Gaseosa" data-price="1.00"><span class="extra-name"><span>Gaseosa</span></span><span class="price">$1.00</span><div class="qty"></div></li>
+        <li class="extra" data-item="be-agua" data-name="Agua" data-price="0.75"><span class="extra-name"><span>Agua</span></span><span class="price">$0.75</span><div class="qty"></div></li>
+      </ul>
+    </section>
+  </div>
+</section>
+
+<section class="contact" id="horario" aria-label="Horario y envíos a domicilio">
+  <div class="wrap">
+    <div class="facts">
+      <div class="fact">
+        <h2 class="fact-label">Horario de atención</h2>
+        <p class="fact-big">07:30 <i>a</i> 12:30</p>
+      </div>
+      <div class="fact">
+        <h2 class="fact-label">Envíos a domicilio</h2>
+        <p class="fact-big"><a href="tel:+593968375755" id="telefono">0968375755</a></p>
+      </div>
+    </div>
+    <div class="cta-row">
+      <a class="btn" href="https://wa.me/593968375755?text=Hola%2C%20Rep%C3%BAblica%20del%20Verde.%20Quiero%20hacer%20un%20pedido." target="_blank" rel="noopener">
+        <svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>Pedir por WhatsApp
+      </a>
+      <button type="button" class="btn btn--ghost" id="copiar" data-copy="0968375755">
+        <svg class="i" aria-hidden="true"><use href="#i-copy"/></svg><span>Copiar número</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-in">
+      <span class="seal" aria-hidden="true"></span>
+      <p class="foot-name">República del Verde</p>
+      <p class="foot-motto">Desde siempre y hasta siempre, viva el bolón.</p>
+      <p class="foot-facts">Pedidos de 07:30 a 12:30. Envíos a domicilio al 0968375755.</p>
+    </div>
+  </div>
+</footer>
+
+<div class="orderbar" id="orderbar">
+  <button type="button" class="wrap orderbar-btn" data-open aria-haspopup="dialog">
+    <span class="ob-label"><b>Tu pedido</b><span id="ob-items">0 productos</span></span>
+    <span class="ob-total" id="ob-total">$0.00</span>
+    <span class="ob-go">Ver pedido</span>
+  </button>
+</div>
+
+<dialog class="sheet" id="pedido" aria-labelledby="pedido-titulo">
+  <div class="sheet-head">
+    <h2 class="sheet-title" id="pedido-titulo">Tu pedido</h2>
+    <button type="button" class="icon-btn" data-close aria-label="Cerrar el pedido"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+  </div>
+  <div class="sheet-body">
+    <ul class="lines" id="lineas"></ul>
+    <button type="button" class="link-btn" id="vaciar">Vaciar pedido</button>
+    <div class="empty" id="vacio" hidden>
+      <b>Tu pedido está vacío</b>
+      <p>Toca «Agregar» en cualquier plato del menú.</p>
+      <button type="button" class="btn btn--ghost" data-close>Volver al menú</button>
+    </div>
+    <form class="fields" id="datos" novalidate>
+      <div class="field">
+        <label for="f-nombre">Tu nombre</label>
+        <input id="f-nombre" name="nombre" type="text" autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="f-direccion">Dirección de entrega</label>
+        <input id="f-direccion" name="direccion" type="text" autocomplete="street-address" required aria-describedby="e-direccion h-direccion">
+        <p class="error" id="e-direccion" hidden>Escribe tu dirección para poder llevarte el pedido.</p>
+        <p class="help" id="h-direccion">Agrega una referencia para llegar más fácil.</p>
+      </div>
+      <div class="field">
+        <label for="f-notas">Notas</label>
+        <textarea id="f-notas" name="notas" rows="2"></textarea>
+        <p class="help">Por ejemplo: sin cebolla.</p>
+      </div>
+    </form>
+  </div>
+  <div class="sheet-foot" id="pedido-pie">
+    <p class="total"><span>Total</span><strong id="total">$0.00</strong></p>
+    <a class="btn btn--block" id="enviar" href="https://wa.me/593968375755" target="_blank" rel="noopener">
+      <svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>Enviar pedido por WhatsApp
+    </a>
+    <p class="help">Se abre WhatsApp con tu pedido ya escrito. Solo falta enviarlo.</p>
+  </div>
+</dialog>
+
+<p class="sr-only" id="aviso" aria-live="polite"></p>
+
+</div>
+
+<script>
+(() => {
+  'use strict';
+  document.documentElement.lang = 'es';
+
+  const WHATSAPP = 'https://wa.me/593968375755';
+  const STORE = 'rdv-pedido-v1';
+  const MAX_AGE = 8 * 60 * 60 * 1000;   // un pedido guardado caduca a las 8 horas
+  const MAX_QTY = 30;
+
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+  const money = cents => '$' + (cents / 100).toFixed(2);
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const icon = name => `<svg class="i" aria-hidden="true"><use href="#i-${name}"/></svg>`;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* El catálogo sale del propio menú de la página: una sola fuente para nombres y precios. */
+  const catalog = new Map();
+  $$('[data-item]').forEach(el => {
+    catalog.set(el.dataset.item, {
+      id: el.dataset.item,
+      name: el.dataset.name,
+      cents: Math.round(parseFloat(el.dataset.price) * 100),
+      ask: el.dataset.ask || '',
+      hint: el.dataset.hint || '',
+      el
+    });
+  });
+
+  const state = { qty: {}, detail: {}, nombre: '', direccion: '', notas: '' };
+
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORE) || 'null');
+    if (saved && typeof saved === 'object' && Date.now() - saved.t < MAX_AGE) {
+      Object.entries(saved.qty || {}).forEach(([id, q]) => {
+        if (catalog.has(id) && Number.isInteger(q) && q > 0) state.qty[id] = Math.min(q, MAX_QTY);
+      });
+      Object.entries(saved.detail || {}).forEach(([id, text]) => {
+        if (state.qty[id] && typeof text === 'string') state.detail[id] = text;
+      });
+      ['nombre', 'direccion', 'notas'].forEach(k => { if (typeof saved[k] === 'string') state[k] = saved[k]; });
+    }
+  } catch (err) { /* sin almacenamiento, el pedido vive solo mientras la página esté abierta */ }
+
+  const save = () => {
+    try { localStorage.setItem(STORE, JSON.stringify({ t: Date.now(), ...state })); } catch (err) { /* idem */ }
+  };
+
+  const ids = () => [...catalog.keys()].filter(id => state.qty[id] > 0);
+  const count = () => ids().reduce((n, id) => n + state.qty[id], 0);
+  const total = () => ids().reduce((sum, id) => sum + state.qty[id] * catalog.get(id).cents, 0);
+
+  const stepperHTML = it =>
+    `<div class="stepper" role="group" aria-label="Cantidad de ${esc(it.name)}">` +
+      `<button type="button" data-dec="${it.id}" aria-label="Quitar uno">${icon('minus')}</button>` +
+      `<output data-count>0</output>` +
+      `<button type="button" data-inc="${it.id}" aria-label="Agregar uno más">${icon('plus')}</button>` +
+    `</div>`;
+
+  /* Cada plato recibe su control: «Agregar», que al usarse pasa a ser − n + */
+  catalog.forEach(it => {
+    $('.qty', it.el).innerHTML =
+      `<button type="button" class="add" data-add="${it.id}" aria-label="Agregar ${esc(it.name)} al pedido">Agregar</button>` +
+      stepperHTML(it);
+  });
+
+  const bar = $('#orderbar');
+  const sheet = $('#pedido');
+  const lines = $('#lineas');
+  const send = $('#enviar');
+  const live = $('#aviso');
+  const clearBtn = $('#vaciar');
+
+  function paintRow(id) {
+    const it = catalog.get(id);
+    const q = state.qty[id] || 0;
+    $('.add', it.el).hidden = q > 0;
+    const stepper = $('.stepper', it.el);
+    stepper.hidden = q === 0;
+    $('[data-count]', stepper).textContent = q;
+  }
+
+  function paintBar(bump) {
+    const n = count();
+    bar.classList.toggle('is-on', n > 0);
+    document.body.classList.toggle('has-order', n > 0);
+    $('#ob-items').textContent = n === 1 ? '1 producto' : `${n} productos`;
+    $('#ob-total').textContent = money(total());
+    if (bump && n > 0 && !reduceMotion) {
+      bar.classList.remove('bump');
+      void bar.offsetWidth;
+      bar.classList.add('bump');
+    }
+  }
+
+  function message() {
+    const rows = ids().map(id => {
+      const it = catalog.get(id);
+      const q = state.qty[id];
+      const detail = (state.detail[id] || '').trim();
+      return `${q} x ${it.name}${detail ? ` (${detail})` : ''} - ${money(q * it.cents)}`;
+    });
+    const extra = [];
+    if (state.nombre.trim()) extra.push(`Nombre: ${state.nombre.trim()}`);
+    if (state.direccion.trim()) extra.push(`Dirección: ${state.direccion.trim()}`);
+    if (state.notas.trim()) extra.push(`Notas: ${state.notas.trim()}`);
+    return 'Hola, República del Verde. Quiero hacer este pedido:\n\n' +
+      rows.join('\n') +
+      `\n\nTotal: ${money(total())}` +
+      (extra.length ? '\n\n' + extra.join('\n') : '');
+  }
+
+  function paintSend() {
+    send.href = `${WHATSAPP}?text=${encodeURIComponent(message())}`;
+  }
+
+  function paintSheet() {
+    const list = ids();
+    lines.innerHTML = list.map(id => {
+      const it = catalog.get(id);
+      const q = state.qty[id];
+      const field = it.ask
+        ? `<div class="field"><label for="d-${id}">${esc(it.ask)}</label>` +
+          `<input id="d-${id}" data-detail="${id}" type="text" autocomplete="off" value="${esc(state.detail[id] || '')}" placeholder="${esc(it.hint)}"></div>`
+        : '';
+      return `<li class="line">` +
+        `<div class="line-top"><span class="line-name">${esc(it.name)}</span><span class="line-sum">${money(q * it.cents)}</span></div>` +
+        `<div class="line-ctl"><span class="line-unit">${money(it.cents)} c/u</span>${stepperHTML(it)}</div>` +
+        field +
+      `</li>`;
+    }).join('');
+    list.forEach(id => { $(`[data-inc="${id}"]`, lines).previousElementSibling.textContent = state.qty[id]; });
+    const empty = list.length === 0;
+    $('#vacio').hidden = !empty;
+    $('#datos').hidden = empty;
+    $('#pedido-pie').hidden = empty;
+    clearBtn.hidden = empty;
+    $('#total').textContent = money(total());
+    paintSend();
+  }
+
+  function setQty(id, q) {
+    q = Math.max(0, Math.min(MAX_QTY, q));
+    if (q > 0) state.qty[id] = q;
+    else { delete state.qty[id]; delete state.detail[id]; }
+    paintRow(id);
+    paintBar(true);
+    if (sheet.open) paintSheet();
+    save();
+  }
+
+  /* Agregar, sumar y quitar: un solo oyente para el menú y para la hoja del pedido */
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('[data-add],[data-inc],[data-dec]');
+    if (!btn) return;
+    const minus = btn.hasAttribute('data-dec');
+    const id = btn.dataset.add || btn.dataset.inc || btn.dataset.dec;
+    const it = catalog.get(id);
+    if (!it) return;
+    const inSheet = sheet.contains(btn);
+    const next = (state.qty[id] || 0) + (minus ? -1 : 1);
+    setQty(id, next);
+    const q = state.qty[id] || 0;
+
+    /* el foco del teclado se queda en un control que siga existiendo */
+    let target;
+    if (inSheet) target = $(`[data-${minus ? 'dec' : 'inc'}="${id}"]`, lines) || $('[data-close]', sheet);
+    else target = q > 0 ? $(`[data-${minus ? 'dec' : 'inc'}]`, it.el) : $('.add', it.el);
+    if (target) target.focus({ preventScroll: true });
+
+    const n = count();
+    live.textContent = (q === 0 ? `${it.name}: quitado del pedido. ` : `${it.name}: ${q} en tu pedido. `) +
+      (n === 1 ? 'Llevas 1 producto.' : `Llevas ${n} productos.`);
+  });
+
+  /* Abrir y cerrar la hoja */
+  document.addEventListener('click', e => {
+    if (e.target.closest('[data-open]')) {
+      disarm();
+      paintSheet();
+      if (typeof sheet.showModal === 'function') sheet.showModal();
+      else sheet.setAttribute('open', '');
+    } else if (e.target.closest('[data-close]')) {
+      if (typeof sheet.close === 'function') sheet.close();
+      else sheet.removeAttribute('open');
+    }
+  });
+  sheet.addEventListener('click', e => { if (e.target === sheet) sheet.close(); });
+
+  /* Vaciar pide un segundo toque en lugar de un cuadro de confirmación */
+  let armed = 0;
+  function disarm() {
+    clearTimeout(armed);
+    armed = 0;
+    clearBtn.textContent = 'Vaciar pedido';
+  }
+  clearBtn.addEventListener('click', () => {
+    if (!armed) {
+      clearBtn.textContent = 'Toca otra vez para vaciar todo';
+      armed = setTimeout(disarm, 4000);
+      return;
+    }
+    disarm();
+    const had = ids();
+    state.qty = {};
+    state.detail = {};
+    had.forEach(paintRow);
+    paintBar(false);
+    paintSheet();
+    save();
+    live.textContent = 'Pedido vaciado.';
+    const back = $('#vacio [data-close]');
+    if (back) back.focus({ preventScroll: true });
+  });
+
+  /* Datos y detalles: se guardan mientras se escriben */
+  const fields = { 'f-nombre': 'nombre', 'f-direccion': 'direccion', 'f-notas': 'notas' };
+  Object.entries(fields).forEach(([id, key]) => { $('#' + id).value = state[key]; });
+  sheet.addEventListener('input', e => {
+    const el = e.target;
+    if (el.dataset.detail) state.detail[el.dataset.detail] = el.value;
+    else if (fields[el.id]) state[fields[el.id]] = el.value;
+    else return;
+    if (el === addr && el.value.trim()) addressMissing(false);
+    paintSend();
+    save();
+  });
+  $('#datos').addEventListener('submit', e => e.preventDefault());
+
+  /* El negocio trabaja solo con envíos: sin dirección no se manda el pedido */
+  const addr = $('#f-direccion');
+  const addrError = $('#e-direccion');
+  function addressMissing(show) {
+    addrError.hidden = !show;
+    if (show) addr.setAttribute('aria-invalid', 'true');
+    else addr.removeAttribute('aria-invalid');
+  }
+  send.addEventListener('click', e => {
+    if (state.direccion.trim()) return;
+    e.preventDefault();
+    addressMissing(true);
+    addr.scrollIntoView({ block: 'center', behavior: reduceMotion ? 'auto' : 'smooth' });
+    addr.focus({ preventScroll: true });
+    live.textContent = 'Falta la dirección de entrega.';
+  });
+
+  /* Copiar el número */
+  const copyBtn = $('#copiar');
+  const copyLabel = $('span', copyBtn);
+  let copyTimer = 0;
+  copyBtn.addEventListener('click', async () => {
+    let done = 'Número copiado';
+    try {
+      await navigator.clipboard.writeText(copyBtn.dataset.copy);
+    } catch (err) {
+      /* si el navegador no deja copiar, se selecciona el número para copiarlo a mano */
+      const range = document.createRange();
+      range.selectNodeContents($('#telefono'));
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      done = 'Número seleccionado';
+    }
+    copyLabel.textContent = done;
+    live.textContent = done + '.';
+    clearTimeout(copyTimer);
+    copyTimer = setTimeout(() => { copyLabel.textContent = 'Copiar número'; }, 2400);
+  });
+
+  /* La barra marca la sección que se está leyendo */
+  const nav = $('.sections');
+  const links = new Map($$('a', nav).map(a => [a.getAttribute('href').slice(1), a]));
+  if ('IntersectionObserver' in window) {
+    const order = [...links.keys()];
+    const inView = new Set();
+    let current = '';
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(en => { if (en.isIntersecting) inView.add(en.target.id); else inView.delete(en.target.id); });
+      const now = order.find(id => inView.has(id)) || '';
+      if (now === current) return;
+      current = now;
+      links.forEach((a, id) => {
+        if (id === now) a.setAttribute('aria-current', 'location');
+        else a.removeAttribute('aria-current');
+      });
+      const a = links.get(now);
+      if (a && nav.scrollWidth > nav.clientWidth + 1) {
+        nav.scrollTo({ left: a.offsetLeft - (nav.clientWidth - a.offsetWidth) / 2, behavior: reduceMotion ? 'auto' : 'smooth' });
+      }
+    }, { rootMargin: '-22% 0px -68% 0px' });
+    order.forEach(id => { const el = document.getElementById(id); if (el) io.observe(el); });
+  }
+
+  catalog.forEach((it, id) => paintRow(id));
+  paintBar(false);
+  paintSend();
+})();
+</script>
